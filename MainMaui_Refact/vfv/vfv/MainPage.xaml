@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:vfv"
+             xmlns:models="clr-namespace:vfv.Models"
+             xmlns:vm="clr-namespace:vfv.ViewModels"
+             xmlns:converters="clr-namespace:vfv.Converters"
+             x:Class="vfv.MainPage"
+             x:DataType="vm:MainViewModel"
+             BackgroundColor="White">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:IsNullConverter x:Key="IsNullConverter" />
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <converters:DeclarationModeTextConverter x:Key="DeclarationModeTextConverter" />
+            <converters:DeclarationModeColorConverter x:Key="DeclarationModeColorConverter" />
+            <converters:DeclarationModeStatusConverter x:Key="DeclarationModeStatusConverter" />
+            <converters:FileActiveBackgroundConverter x:Key="FileActiveBackgroundConverter" />
+            <converters:ExtensionUpperCaseConverter x:Key="ExtensionUpperCaseConverter" />
+            <converters:ProgressPercentConverter x:Key="ProgressPercentConverter" />
+            <converters:ProgressTextConverter x:Key="ProgressTextConverter" />
+            <converters:DeleteButtonTextConverter x:Key="DeleteButtonTextConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="16" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="128" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Top Toolbar -->
+        <Frame Grid.Row="0" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" CornerRadius="4" Padding="12" HasShadow="False">
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left side buttons -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                    <Button Text="📁 Open File"
+                            BackgroundColor="White"
+                            TextColor="#333"
+                            BorderColor="#D9D9D9"
+                            BorderWidth="1"
+                            CornerRadius="4"
+                            Command="{Binding OpenFileCommand}" />
+
+                    <Button Text="▶️"
+                            BackgroundColor="#00CC00"
+                            TextColor="White"
+                            WidthRequest="40"
+                            CornerRadius="4"
+                            IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}"
+                            Command="{Binding StartExecutionCommand}" />
+
+                    <Button Text="⏹️"
+                            BackgroundColor="#CC0000"
+                            TextColor="White"
+                            WidthRequest="40"
+                            CornerRadius="4"
+                            IsEnabled="{Binding IsExecuting}"
+                            Command="{Binding StopExecutionCommand}" />
+
+                    <Button Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextConverter}}"
+                            BackgroundColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeColorConverter}}"
+                            TextColor="White"
+                            BorderWidth="1"
+                            CornerRadius="4"
+                            Command="{Binding ToggleDeclarationModeCommand}" />
+
+                    <Label Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeStatusConverter}}"
+                           VerticalOptions="Center"
+                           TextColor="#666" />
+                </HorizontalStackLayout>
+
+                <!-- Right side buttons -->
+                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                    <Button Text="🔧 Tools"
+                            BackgroundColor="White"
+                            TextColor="#333"
+                            BorderColor="#D9D9D9"
+                            BorderWidth="1"
+                            CornerRadius="4"
+                            Clicked="OnToolsClicked" />
+
+                    <Button Text="⚙️ Settings"
+                            BackgroundColor="White"
+                            TextColor="#333"
+                            BorderColor="#D9D9D9"
+                            BorderWidth="1"
+                            CornerRadius="4"
+                            Command="{Binding OpenSettingsCommand}" />
+
+                    <Button Text="❓ Help"
+                            BackgroundColor="White"
+                            TextColor="#333"
+                            BorderColor="#D9D9D9"
+                            BorderWidth="1"
+                            CornerRadius="4"
+                            Clicked="OnHelpClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- File List -->
+            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#D9D9D9" Padding="0" HasShadow="False">
+                <Grid RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Files ScrollView -->
+                    <ScrollView Grid.Row="0">
+                        <VerticalStackLayout Padding="16" Spacing="4" BindableLayout.ItemsSource="{Binding Files}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:FileItem">
+                                    <Frame Padding="12"
+                                           BackgroundColor="{Binding IsActive, Converter={StaticResource FileActiveBackgroundConverter}}"
+                                           BorderColor="Transparent"
+                                           CornerRadius="4"
+                                           HasShadow="False">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=SelectFileCommand}"
+                                                                CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0"
+                                                    IsChecked="{Binding IsSelected}"
+                                                    Color="#003399">
+                                                <CheckBox.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=ToggleFileSelectionCommand}"
+                                                                        CommandParameter="{Binding .}" />
+                                                </CheckBox.GestureRecognizers>
+                                            </CheckBox>
+
+                                            <Label Grid.Column="1"
+                                                   Text="📄"
+                                                   FontSize="20"
+                                                   TextColor="{Binding IconColor}"
+                                                   VerticalOptions="Center" />
+
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding Name}"
+                                                   VerticalOptions="Center"
+                                                   FontSize="14" />
+
+                                            <Label Grid.Column="3"
+                                                   Text="{Binding Size}"
+                                                   VerticalOptions="Center"
+                                                   TextColor="#999"
+                                                   FontSize="12" />
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- File List Footer -->
+                    <Frame Grid.Row="1"
+                           BackgroundColor="White"
+                           BorderColor="#D9D9D9"
+                           Padding="12"
+                           HasShadow="False"
+                           CornerRadius="0">
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                                <Button Text="⬆️ Move Up"
+                                        BackgroundColor="White"
+                                        TextColor="#333"
+                                        BorderColor="#D9D9D9"
+                                        BorderWidth="1"
+                                        CornerRadius="4"
+                                        Command="{Binding MoveFileUpCommand}" />
+
+                                <Button Text="⬇️ Move Down"
+                                        BackgroundColor="White"
+                                        TextColor="#333"
+                                        BorderColor="#D9D9D9"
+                                        BorderWidth="1"
+                                        CornerRadius="4"
+                                        Command="{Binding MoveFileDownCommand}" />
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1"
+                                    Text="{Binding Files, Converter={StaticResource DeleteButtonTextConverter}}"
+                                    BackgroundColor="#CC0000"
+                                    TextColor="White"
+                                    BorderColor="#CC0000"
+                                    BorderWidth="1"
+                                    CornerRadius="4"
+                                    Command="{Binding DeleteSelectedFilesCommand}" />
+                        </Grid>
+                    </Frame>
+                </Grid>
+            </Frame>
+
+            <!-- File Details -->
+            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="#D9D9D9" Padding="24" HasShadow="False">
+                <Grid RowSpacing="24" IsVisible="{Binding ActiveFile, Converter={StaticResource IsNotNullConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- File Header -->
+                    <VerticalStackLayout Grid.Row="0" Spacing="4">
+                        <Label Text="{Binding ActiveFile.Name}"
+                               FontSize="20"
+                               FontAttributes="Bold" />
+                        <Label Text="{Binding ActiveFile.Extension, Converter={StaticResource ExtensionUpperCaseConverter}}"
+                               TextColor="#999"
+                               FontSize="12" />
+                    </VerticalStackLayout>
+
+                    <!-- File Properties -->
+                    <VerticalStackLayout Grid.Row="1" Spacing="16">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Size" TextColor="#999" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Size}" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Modified" TextColor="#999" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Modified}" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Created" TextColor="#999" />
+                            <Label Grid.Column="1" Text="Oct 8, 2025" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Location" TextColor="#999" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Name, StringFormat='/{0}'}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Empty State -->
+                <Label Text="Select a file to view details"
+                       TextColor="#999"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       IsVisible="{Binding ActiveFile, Converter={StaticResource IsNullConverter}}" />
+            </Frame>
+        </Grid>
+
+        <!-- Error Panel -->
+        <Frame Grid.Row="2" BackgroundColor="White" BorderColor="#D9D9D9" Padding="16" HasShadow="False">
+            <ScrollView>
+                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Errors}">
+                    <BindableLayout.EmptyView>
+                        <Label Text="No errors"
+                               TextColor="#999"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </BindableLayout.EmptyView>
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Frame BackgroundColor="White"
+                                   BorderColor="#CC0000"
+                                   Padding="12"
+                                   HasShadow="False">
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0"
+                                           Text="⚠️"
+                                           FontSize="16"
+                                           VerticalOptions="Start" />
+
+                                    <Label Grid.Column="1"
+                                           Text="{Binding .}"
+                                           TextColor="#CC0000"
+                                           FontSize="12"
+                                           LineBreakMode="WordWrap" />
+
+                                    <Button Grid.Column="2"
+                                            Text="✕"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#999"
+                                            FontSize="16"
+                                            WidthRequest="32"
+                                            HeightRequest="32"
+                                            Padding="0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=ClearErrorCommand}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Frame>
+
+        <!-- Footer with Progress -->
+        <Frame Grid.Row="3" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" Padding="8" HasShadow="False">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0"
+                       Text="{Binding IsExecuting, Converter={StaticResource ProgressTextConverter}, ConverterParameter={Binding Progress}}"
+                       VerticalOptions="Center"
+                       TextColor="#666"
+                       FontSize="12" />
+
+                <ProgressBar Grid.Column="1"
+                             Progress="{Binding Progress, Converter={StaticResource ProgressPercentConverter}}"
+                             ProgressColor="#003399"
+                             VerticalOptions="Center" />
+            </Grid>
+        </Frame>
+    </Grid>
+</ContentPage>
