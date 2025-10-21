@@ -34,7 +34,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Toolbar -->
-        <Frame Grid.Row="0" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" CornerRadius="4" Padding="12" HasShadow="False">
+        <Frame Grid.Row="0" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" CornerRadius="4" Padding="12" HasShadow="False" StyleClass="card-muted">
             <Grid ColumnSpacing="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -49,6 +49,7 @@
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
+                            StyleClass="outline"
                             Command="{Binding OpenFileCommand}" />
 
                     <Button Text="▶️"
@@ -64,6 +65,7 @@
                             TextColor="White"
                             WidthRequest="40"
                             CornerRadius="4"
+                            StyleClass="destructive"
                             IsEnabled="{Binding IsExecuting}"
                             Command="{Binding StopExecutionCommand}" />
 
@@ -76,7 +78,8 @@
 
                     <Label Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeStatusConverter}}"
                            VerticalOptions="Center"
-                           TextColor="#666" />
+                           TextColor="#666"
+                           StyleClass="muted-text" />
                 </HorizontalStackLayout>
 
                 <!-- Right side buttons -->
@@ -87,6 +90,7 @@
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
+                            StyleClass="outline"
                             Clicked="OnToolsClicked" />
 
                     <Button Text="⚙️ Settings"
@@ -95,6 +99,7 @@
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
+                            StyleClass="outline"
                             Command="{Binding OpenSettingsCommand}" />
 
                     <Button Text="❓ Help"
@@ -103,6 +108,7 @@
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
+                            StyleClass="outline"
                             Clicked="OnHelpClicked" />
                 </HorizontalStackLayout>
             </Grid>
@@ -116,7 +122,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- File List -->
-            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#D9D9D9" Padding="0" HasShadow="False">
+            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#D9D9D9" Padding="0" HasShadow="False" StyleClass="card">
                 <Grid RowSpacing="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -148,7 +154,8 @@
 
                                             <CheckBox Grid.Column="0"
                                                     IsChecked="{Binding IsSelected}"
-                                                    Color="#003399">
+                                                    Color="#003399"
+                                                    StyleClass="primary">
                                                 <CheckBox.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=ToggleFileSelectionCommand}"
                                                                         CommandParameter="{Binding .}" />
@@ -164,12 +171,14 @@
                                             <Label Grid.Column="2"
                                                    Text="{Binding Name}"
                                                    VerticalOptions="Center"
-                                                   FontSize="14" />
+                                                   FontSize="14"
+                                                   StyleClass="body-text" />
 
                                             <Label Grid.Column="3"
                                                    Text="{Binding Size}"
                                                    VerticalOptions="Center"
                                                    TextColor="#999"
+                                                   StyleClass="small-text, muted-text"
                                                    FontSize="12" />
                                         </Grid>
                                     </Frame>
@@ -198,6 +207,7 @@
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
+                                        StyleClass="outline"
                                         Command="{Binding MoveFileUpCommand}" />
 
                                 <Button Text="⬇️ Move Down"
@@ -206,6 +216,7 @@
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
+                                        StyleClass="outline"
                                         Command="{Binding MoveFileDownCommand}" />
                             </HorizontalStackLayout>
 
@@ -216,6 +227,7 @@
                                     BorderColor="#CC0000"
                                     BorderWidth="1"
                                     CornerRadius="4"
+                                    StyleClass="destructive"
                                     Command="{Binding DeleteSelectedFilesCommand}" />
                         </Grid>
                     </Frame>
@@ -223,7 +235,7 @@
             </Frame>
 
             <!-- File Details -->
-            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="#D9D9D9" Padding="24" HasShadow="False">
+            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="#D9D9D9" Padding="24" HasShadow="False" StyleClass="card">
                 <Grid RowSpacing="24" IsVisible="{Binding ActiveFile, Converter={StaticResource IsNotNullConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -234,10 +246,12 @@
                     <VerticalStackLayout Grid.Row="0" Spacing="4">
                         <Label Text="{Binding ActiveFile.Name}"
                                FontSize="20"
-                               FontAttributes="Bold" />
+                               FontAttributes="Bold"
+                               StyleClass="heading-2" />
                         <Label Text="{Binding ActiveFile.Extension, Converter={StaticResource ExtensionUpperCaseConverter}}"
                                TextColor="#999"
-                               FontSize="12" />
+                               FontSize="12"
+                               StyleClass="small-text, muted-text" />
                     </VerticalStackLayout>
 
                     <!-- File Properties -->
@@ -247,8 +261,8 @@
                                 <ColumnDefinition Width="96" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Size" TextColor="#999" />
-                            <Label Grid.Column="1" Text="{Binding ActiveFile.Size}" />
+                            <Label Grid.Column="0" Text="Size" TextColor="#999" StyleClass="muted-text" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Size}" StyleClass="body-text" />
                         </Grid>
 
                         <Grid ColumnSpacing="12">
@@ -256,8 +270,8 @@
                                 <ColumnDefinition Width="96" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Modified" TextColor="#999" />
-                            <Label Grid.Column="1" Text="{Binding ActiveFile.Modified}" />
+                            <Label Grid.Column="0" Text="Modified" TextColor="#999" StyleClass="muted-text" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Modified}" StyleClass="body-text" />
                         </Grid>
 
                         <Grid ColumnSpacing="12">
@@ -265,8 +279,8 @@
                                 <ColumnDefinition Width="96" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Created" TextColor="#999" />
-                            <Label Grid.Column="1" Text="Oct 8, 2025" />
+                            <Label Grid.Column="0" Text="Created" TextColor="#999" StyleClass="muted-text" />
+                            <Label Grid.Column="1" Text="Oct 8, 2025" StyleClass="body-text" />
                         </Grid>
 
                         <Grid ColumnSpacing="12">
@@ -274,8 +288,8 @@
                                 <ColumnDefinition Width="96" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Location" TextColor="#999" />
-                            <Label Grid.Column="1" Text="{Binding ActiveFile.Name, StringFormat='/{0}'}" />
+                            <Label Grid.Column="0" Text="Location" TextColor="#999" StyleClass="muted-text" />
+                            <Label Grid.Column="1" Text="{Binding ActiveFile.Name, StringFormat='/{0}'}" StyleClass="body-text" />
                         </Grid>
                     </VerticalStackLayout>
                 </Grid>
@@ -285,19 +299,21 @@
                        TextColor="#999"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"
+                       StyleClass="muted-text"
                        IsVisible="{Binding ActiveFile, Converter={StaticResource IsNullConverter}}" />
             </Frame>
         </Grid>
 
         <!-- Error Panel -->
-        <Frame Grid.Row="2" BackgroundColor="White" BorderColor="#D9D9D9" Padding="16" HasShadow="False">
+        <Frame Grid.Row="2" BackgroundColor="White" BorderColor="#D9D9D9" Padding="16" HasShadow="False" StyleClass="card">
             <ScrollView>
                 <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Errors}">
                     <BindableLayout.EmptyView>
                         <Label Text="No errors"
                                TextColor="#999"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center"
+                               StyleClass="muted-text" />
                     </BindableLayout.EmptyView>
 
                     <BindableLayout.ItemTemplate>
@@ -305,7 +321,8 @@
                             <Frame BackgroundColor="White"
                                    BorderColor="#CC0000"
                                    Padding="12"
-                                   HasShadow="False">
+                                   HasShadow="False"
+                                   StyleClass="alert-error">
                                 <Grid ColumnSpacing="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -322,7 +339,8 @@
                                            Text="{Binding .}"
                                            TextColor="#CC0000"
                                            FontSize="12"
-                                           LineBreakMode="WordWrap" />
+                                           LineBreakMode="WordWrap"
+                                           StyleClass="text-destructive, small-text" />
 
                                     <Button Grid.Column="2"
                                             Text="✕"
@@ -343,7 +361,7 @@
         </Frame>
 
         <!-- Footer with Progress -->
-        <Frame Grid.Row="3" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" Padding="8" HasShadow="False">
+        <Frame Grid.Row="3" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" Padding="8" HasShadow="False" StyleClass="card-muted">
             <Grid ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -354,12 +372,14 @@
                        Text="{Binding IsExecuting, Converter={StaticResource ProgressTextConverter}, ConverterParameter={Binding Progress}}"
                        VerticalOptions="Center"
                        TextColor="#666"
-                       FontSize="12" />
+                       FontSize="12"
+                       StyleClass="small-text, muted-text" />
 
                 <ProgressBar Grid.Column="1"
                              Progress="{Binding Progress, Converter={StaticResource ProgressPercentConverter}}"
                              ProgressColor="#003399"
-                             VerticalOptions="Center" />
+                             VerticalOptions="Center"
+                             StyleClass="accent" />
             </Grid>
         </Frame>
     </Grid>

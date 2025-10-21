@@ -1,0 +1,404 @@
+/*
+ * MAUI CSS Styles - Converted from FigmaWebApp globals.css
+ * Based on Tailwind CSS color scheme and design tokens
+ * Note: MAUI CSS doesn't support CSS variables, so values are hardcoded
+ */
+
+/* ========================================
+ * Base Application Styles
+ * ======================================== */
+
+^contentpage {
+    background-color: #ffffff;
+}
+
+/* ========================================
+ * Typography
+ * ======================================== */
+
+/* Headings */
+label.heading-1 {
+    font-size: 24;
+    font-weight: 500;
+    color: #333333;
+}
+
+label.heading-2 {
+    font-size: 20;
+    font-weight: 500;
+    color: #333333;
+}
+
+label.heading-3 {
+    font-size: 18;
+    font-weight: 500;
+    color: #333333;
+}
+
+label.heading-4 {
+    font-size: 16;
+    font-weight: 500;
+    color: #333333;
+}
+
+/* Body text */
+label {
+    font-size: 16;
+    font-weight: 400;
+    color: #333333;
+}
+
+label.body-text {
+    font-size: 16;
+    color: #333333;
+}
+
+label.small-text {
+    font-size: 12;
+    color: #666666;
+}
+
+label.muted-text {
+    color: #666666;
+}
+
+/* ========================================
+ * Buttons
+ * ======================================== */
+
+button {
+    background-color: #003399;
+    color: #ffffff;
+    font-size: 16;
+    font-weight: 500;
+    border-radius: 6;
+    padding: 12 24;
+}
+
+button.primary {
+    background-color: #003399;
+    color: #ffffff;
+}
+
+button.secondary {
+    background-color: #FFCC00;
+    color: #003399;
+}
+
+button.accent {
+    background-color: #0066CC;
+    color: #ffffff;
+}
+
+button.destructive {
+    background-color: #CC0000;
+    color: #ffffff;
+}
+
+button.outline {
+    background-color: transparent;
+    color: #003399;
+    border-color: #D9D9D9;
+    border-width: 1;
+}
+
+button.ghost {
+    background-color: transparent;
+    color: #333333;
+}
+
+/* ========================================
+ * Input Controls
+ * ======================================== */
+
+entry {
+    background-color: #F5F5F5;
+    color: #333333;
+    font-size: 16;
+    border-radius: 6;
+    padding: 12;
+}
+
+entry.input {
+    background-color: #F5F5F5;
+    border-color: #D9D9D9;
+    border-width: 1;
+}
+
+editor {
+    background-color: #F5F5F5;
+    color: #333333;
+    font-size: 16;
+    border-radius: 6;
+    padding: 12;
+}
+
+picker {
+    background-color: #F5F5F5;
+    color: #333333;
+    font-size: 16;
+}
+
+/* ========================================
+ * Borders & Cards
+ * ======================================== */
+
+frame.card {
+    background-color: #ffffff;
+    border-color: #D9D9D9;
+    border-width: 1;
+    border-radius: 6;
+    padding: 16;
+}
+
+frame.card-muted {
+    background-color: #F5F5F5;
+    border-radius: 6;
+    padding: 16;
+}
+
+border.border {
+    border-color: #D9D9D9;
+    border-width: 1;
+}
+
+border.border-primary {
+    border-color: #003399;
+    border-width: 2;
+}
+
+border.border-accent {
+    border-color: #0066CC;
+    border-width: 1;
+}
+
+/* ========================================
+ * Containers & Layout
+ * ======================================== */
+
+stacklayout.container {
+    padding: 16;
+}
+
+stacklayout.container-lg {
+    padding: 24;
+}
+
+stacklayout.container-xl {
+    padding: 32;
+}
+
+grid.grid {
+    padding: 16;
+}
+
+/* ========================================
+ * Sidebar Styles
+ * ======================================== */
+
+frame.sidebar {
+    background-color: #F5F5F5;
+    border-color: #D9D9D9;
+}
+
+label.sidebar-text {
+    color: #333333;
+}
+
+button.sidebar-primary {
+    background-color: #003399;
+    color: #ffffff;
+}
+
+button.sidebar-accent {
+    background-color: #E6F2FF;
+    color: #003399;
+}
+
+/* ========================================
+ * List & Collection Views
+ * ======================================== */
+
+collectionview {
+    background-color: transparent;
+}
+
+listview {
+    background-color: transparent;
+}
+
+/* ========================================
+ * Progress & Activity Indicators
+ * ======================================== */
+
+progressbar {
+    background-color: #F5F5F5;
+    color: #003399;
+}
+
+progressbar.accent {
+    color: #0066CC;
+}
+
+activityindicator {
+    color: #003399;
+}
+
+/* ========================================
+ * CheckBox & Switch
+ * ======================================== */
+
+checkbox {
+    color: #003399;
+}
+
+switch {
+    background-color: #D9D9D9;
+    color: #003399;
+}
+
+/* ========================================
+ * Alerts & Notifications
+ * ======================================== */
+
+frame.alert {
+    border-radius: 6;
+    padding: 12;
+    border-width: 1;
+}
+
+frame.alert-info {
+    background-color: #E6F2FF;
+    border-color: #0066CC;
+}
+
+frame.alert-warning {
+    background-color: #FFF9E6;
+    border-color: #FFCC00;
+}
+
+frame.alert-error {
+    background-color: #FFE6E6;
+    border-color: #CC0000;
+}
+
+frame.alert-success {
+    background-color: #E6F7E6;
+    border-color: #00CC66;
+}
+
+/* ========================================
+ * Spacing Utilities
+ * ======================================== */
+
+.spacing-xs {
+    padding: 4;
+}
+
+.spacing-sm {
+    padding: 8;
+}
+
+.spacing-md {
+    padding: 12;
+}
+
+.spacing-lg {
+    padding: 16;
+}
+
+.spacing-xl {
+    padding: 24;
+}
+
+/* ========================================
+ * Background Colors
+ * ======================================== */
+
+.bg-primary {
+    background-color: #003399;
+}
+
+.bg-secondary {
+    background-color: #FFCC00;
+}
+
+.bg-accent {
+    background-color: #0066CC;
+}
+
+.bg-muted {
+    background-color: #F5F5F5;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+/* ========================================
+ * Text Colors
+ * ======================================== */
+
+label.text-primary {
+    color: #003399;
+}
+
+label.text-secondary {
+    color: #FFCC00;
+}
+
+label.text-accent {
+    color: #0066CC;
+}
+
+label.text-muted {
+    color: #666666;
+}
+
+label.text-foreground {
+    color: #333333;
+}
+
+label.text-destructive {
+    color: #CC0000;
+}
+
+label.text-white {
+    color: #ffffff;
+}
+
+/* ========================================
+ * Opacity & Visual Effects
+ * ======================================== */
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+
+/* ========================================
+ * Chart Colors (for data visualization)
+ * ======================================== */
+
+.chart-1 {
+    color: #003399;
+}
+
+.chart-2 {
+    color: #0066CC;
+}
+
+.chart-3 {
+    color: #FFCC00;
+}
+
+.chart-4 {
+    color: #99CCFF;
+}
+
+.chart-5 {
+    color: #666666;
+}

@@ -50,6 +50,9 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- CSS Stylesheets -->
+		<!-- <MauiCss Include="Resources\Styles\*.css" /> -->
 	</ItemGroup>
 
 	<ItemGroup>
