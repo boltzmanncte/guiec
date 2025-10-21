@@ -44,31 +44,51 @@
 
                 <!-- Left side buttons -->
                 <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                    <Button Text="📁 Open File"
+                    <Button Text="Open File"
                             BackgroundColor="White"
                             TextColor="#333"
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
                             StyleClass="outline"
+                            ImageSource="folder_open.png"
                             Command="{Binding OpenFileCommand}" />
 
-                    <Button Text="▶️"
-                            BackgroundColor="#00CC00"
-                            TextColor="White"
+                    <Border BackgroundColor="#00CC00"
                             WidthRequest="40"
-                            CornerRadius="4"
-                            IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}"
-                            Command="{Binding StartExecutionCommand}" />
+                            HeightRequest="40"
+                            StrokeThickness="0"
+                            Padding="8"
+                            IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="4" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding StartExecutionCommand}" />
+                        </Border.GestureRecognizers>
+                        <Image Source="play.png"
+                               Aspect="AspectFit"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+                    </Border>
 
-                    <Button Text="⏹️"
-                            BackgroundColor="#CC0000"
-                            TextColor="White"
+                    <Border BackgroundColor="#CC0000"
                             WidthRequest="40"
-                            CornerRadius="4"
-                            StyleClass="destructive"
-                            IsEnabled="{Binding IsExecuting}"
-                            Command="{Binding StopExecutionCommand}" />
+                            HeightRequest="40"
+                            StrokeThickness="0"
+                            Padding="8"
+                            IsEnabled="{Binding IsExecuting}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="4" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding StopExecutionCommand}" />
+                        </Border.GestureRecognizers>
+                        <Image Source="square.png"
+                               Aspect="AspectFit"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+                    </Border>
 
                     <Button Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextConverter}}"
                             BackgroundColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeColorConverter}}"
@@ -85,31 +105,34 @@
 
                 <!-- Right side buttons -->
                 <HorizontalStackLayout Grid.Column="1" Spacing="8">
-                    <Button Text="🔧 Tools"
+                    <Button Text="Tools"
                             BackgroundColor="White"
                             TextColor="#333"
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
                             StyleClass="outline"
+                            ImageSource="wrench.png"
                             Clicked="OnToolsClicked" />
 
-                    <Button Text="⚙️ Settings"
+                    <Button Text="Settings"
                             BackgroundColor="White"
                             TextColor="#333"
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
                             StyleClass="outline"
+                            ImageSource="settings.png"
                             Command="{Binding OpenSettingsCommand}" />
 
-                    <Button Text="❓ Help"
+                    <Button Text="Help"
                             BackgroundColor="White"
                             TextColor="#333"
                             BorderColor="#D9D9D9"
                             BorderWidth="1"
                             CornerRadius="4"
                             StyleClass="outline"
+                            ImageSource="help_circle.png"
                             Clicked="OnHelpClicked" />
                 </HorizontalStackLayout>
             </Grid>
@@ -154,19 +177,14 @@
                                             </Grid.ColumnDefinitions>
 
                                             <CheckBox Grid.Column="0"
-                                                    IsChecked="{Binding IsSelected}"
+                                                    IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                                     Color="#003399"
-                                                    StyleClass="primary">
-                                                <CheckBox.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=ToggleFileSelectionCommand}"
-                                                                        CommandParameter="{Binding .}" />
-                                                </CheckBox.GestureRecognizers>
-                                            </CheckBox>
+                                                    StyleClass="primary" />
 
-                                            <Label Grid.Column="1"
-                                                   Text="📄"
-                                                   FontSize="20"
-                                                   TextColor="{Binding IconColor}"
+                                            <Image Grid.Column="1"
+                                                   Source="file_text.png"
+                                                   WidthRequest="20"
+                                                   HeightRequest="20"
                                                    VerticalOptions="Center" />
 
                                             <Label Grid.Column="2"
@@ -202,34 +220,44 @@
                             </Grid.ColumnDefinitions>
 
                             <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                                <Button Text="⬆️ Move Up"
+                                <Button Text="Move Up"
                                         BackgroundColor="White"
                                         TextColor="#333"
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
                                         StyleClass="outline"
+                                        ImageSource="chevron_up.png"
                                         Command="{Binding MoveFileUpCommand}" />
 
-                                <Button Text="⬇️ Move Down"
+                                <Button Text="Move Down"
                                         BackgroundColor="White"
                                         TextColor="#333"
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
                                         StyleClass="outline"
+                                        ImageSource="chevron_down.png"
                                         Command="{Binding MoveFileDownCommand}" />
                             </HorizontalStackLayout>
 
-                            <Button Grid.Column="1"
-                                    Text="{Binding Files, Converter={StaticResource DeleteButtonTextConverter}}"
+                            <Border Grid.Column="1"
                                     BackgroundColor="#CC0000"
-                                    TextColor="White"
-                                    BorderColor="#CC0000"
-                                    BorderWidth="1"
-                                    CornerRadius="4"
-                                    StyleClass="destructive"
-                                    Command="{Binding DeleteSelectedFilesCommand}" />
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    StrokeThickness="0"
+                                    Padding="8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="4" />
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding DeleteSelectedFilesCommand}" />
+                                </Border.GestureRecognizers>
+                                <Image Source="trash_2.png"
+                                       Aspect="AspectFit"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center" />
+                            </Border>
                         </Grid>
                     </Frame>
                 </Grid>
@@ -331,9 +359,10 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0"
-                                           Text="⚠️"
-                                           FontSize="16"
+                                    <Image Grid.Column="0"
+                                           Source="alert_circle.png"
+                                           WidthRequest="16"
+                                           HeightRequest="16"
                                            VerticalOptions="Start" />
 
                                     <Label Grid.Column="1"
@@ -344,13 +373,11 @@
                                            StyleClass="text-destructive, small-text" />
 
                                     <Button Grid.Column="2"
-                                            Text="✕"
                                             BackgroundColor="Transparent"
-                                            TextColor="#999"
-                                            FontSize="16"
                                             WidthRequest="32"
                                             HeightRequest="32"
                                             Padding="0"
+                                            ImageSource="x.png"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=ClearErrorCommand}"
                                             CommandParameter="{Binding .}" />
                                 </Grid>
