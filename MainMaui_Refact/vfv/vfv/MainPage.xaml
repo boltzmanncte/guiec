@@ -16,6 +16,7 @@
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
             <converters:DeclarationModeTextConverter x:Key="DeclarationModeTextConverter" />
             <converters:DeclarationModeColorConverter x:Key="DeclarationModeColorConverter" />
+            <converters:DeclarationModeTextColorConverter x:Key="DeclarationModeTextColorConverter" />
             <converters:DeclarationModeStatusConverter x:Key="DeclarationModeStatusConverter" />
             <converters:FileActiveBackgroundConverter x:Key="FileActiveBackgroundConverter" />
             <converters:ExtensionUpperCaseConverter x:Key="ExtensionUpperCaseConverter" />
@@ -71,7 +72,7 @@
 
                     <Button Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextConverter}}"
                             BackgroundColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeColorConverter}}"
-                            TextColor="White"
+                            TextColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextColorConverter}}"
                             BorderWidth="1"
                             CornerRadius="4"
                             Command="{Binding ToggleDeclarationModeCommand}" />

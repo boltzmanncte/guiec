@@ -85,6 +85,21 @@ public class DeclarationModeStatusConverter : IValueConverter
     }
 }
 
+public class DeclarationModeTextColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is bool isDeclarationMode && isDeclarationMode
+            ? Colors.White
+            : Colors.Black;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public class FileActiveBackgroundConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
