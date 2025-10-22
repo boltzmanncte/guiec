@@ -49,7 +49,9 @@
                             BorderColor="#E0E0E0"
                             BorderWidth="1"
                             CornerRadius="6"
-                            Padding="12,8"
+                            Padding="16,8"
+                            HeightRequest="36"
+                            FontSize="14"
                             StyleClass="outline"
                             ImageSource="folder_open.png"
                             Command="{Binding OpenFileCommand}"
@@ -61,17 +63,17 @@
                     </Button>
 
                     <Border BackgroundColor="#10B981"
-                            WidthRequest="42"
-                            HeightRequest="42"
+                            WidthRequest="36"
+                            HeightRequest="36"
                             StrokeThickness="0"
-                            Padding="9"
+                            Padding="8"
                             x:Name="PlayButton"
                             IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}">
                         <Border.Shadow>
                             <Shadow Brush="#10B981" Offset="0,2" Radius="4" Opacity="0.3" />
                         </Border.Shadow>
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
+                            <RoundRectangle CornerRadius="6" />
                         </Border.StrokeShape>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding StartExecutionCommand}"
@@ -84,17 +86,17 @@
                     </Border>
 
                     <Border BackgroundColor="#EF4444"
-                            WidthRequest="42"
-                            HeightRequest="42"
+                            WidthRequest="36"
+                            HeightRequest="36"
                             StrokeThickness="0"
-                            Padding="9"
+                            Padding="8"
                             x:Name="StopButton"
                             IsEnabled="{Binding IsExecuting}">
                         <Border.Shadow>
                             <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
                         </Border.Shadow>
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
+                            <RoundRectangle CornerRadius="6" />
                         </Border.StrokeShape>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding StopExecutionCommand}"
@@ -110,8 +112,13 @@
                             BackgroundColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeColorConverter}}"
                             TextColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextColorConverter}}"
                             BorderWidth="1"
-                            CornerRadius="4"
-                            Command="{Binding ToggleDeclarationModeCommand}" />
+                            CornerRadius="6"
+                            Padding="16,8"
+                            HeightRequest="36"
+                            FontSize="14"
+                            Command="{Binding ToggleDeclarationModeCommand}"
+                            Pressed="OnButtonPressed"
+                            Released="OnButtonReleased" />
 
                     <Label Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeStatusConverter}}"
                            VerticalOptions="Center"
@@ -127,7 +134,9 @@
                             BorderColor="#E0E0E0"
                             BorderWidth="1"
                             CornerRadius="6"
-                            Padding="12,8"
+                            Padding="16,8"
+                            HeightRequest="36"
+                            FontSize="14"
                             StyleClass="outline"
                             ImageSource="wrench.png"
                             Clicked="OnToolsClicked"
@@ -144,7 +153,9 @@
                             BorderColor="#E0E0E0"
                             BorderWidth="1"
                             CornerRadius="6"
-                            Padding="12,8"
+                            Padding="16,8"
+                            HeightRequest="36"
+                            FontSize="14"
                             StyleClass="outline"
                             ImageSource="settings.png"
                             Command="{Binding OpenSettingsCommand}"
@@ -161,7 +172,9 @@
                             BorderColor="#E0E0E0"
                             BorderWidth="1"
                             CornerRadius="6"
-                            Padding="12,8"
+                            Padding="16,8"
+                            HeightRequest="36"
+                            FontSize="14"
                             StyleClass="outline"
                             ImageSource="help_circle.png"
                             Clicked="OnHelpClicked"
@@ -261,46 +274,58 @@
                             <HorizontalStackLayout Grid.Column="0" Spacing="8">
                                 <Button Text="Move Up"
                                         BackgroundColor="White"
-                                        TextColor="#333"
-                                        BorderColor="#D9D9D9"
+                                        TextColor="#1F1F1F"
+                                        BorderColor="#E0E0E0"
                                         BorderWidth="1"
-                                        CornerRadius="4"
-                                        Padding="8,4"
+                                        CornerRadius="6"
+                                        Padding="12,6"
+                                        HeightRequest="32"
+                                        FontSize="14"
                                         StyleClass="outline"
                                         ImageSource="chevron_up.png"
                                         ContentLayout="Left,4"
                                         Command="{Binding MoveFileUpCommand}"
                                         Pressed="OnButtonPressed"
-                                        Released="OnButtonReleased" />
+                                        Released="OnButtonReleased">
+                                    <Button.Shadow>
+                                        <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                                    </Button.Shadow>
+                                </Button>
 
 
                                 <Button Text="Move Down"
                                         BackgroundColor="White"
-                                        TextColor="#333"
-                                        BorderColor="#D9D9D9"
+                                        TextColor="#1F1F1F"
+                                        BorderColor="#E0E0E0"
                                         BorderWidth="1"
-                                        CornerRadius="4"
-                                        Padding="8,4"
+                                        CornerRadius="6"
+                                        Padding="12,6"
+                                        HeightRequest="32"
+                                        FontSize="14"
                                         StyleClass="outline"
                                         ImageSource="chevron_down.png"
                                         ContentLayout="Left,4"
                                         Command="{Binding MoveFileDownCommand}"
                                         Pressed="OnButtonPressed"
-                                        Released="OnButtonReleased" />
+                                        Released="OnButtonReleased">
+                                    <Button.Shadow>
+                                        <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                                    </Button.Shadow>
+                                </Button>
                             </HorizontalStackLayout>
 
                             <Border Grid.Column="1"
                                     BackgroundColor="#EF4444"
-                                    WidthRequest="42"
-                                    HeightRequest="42"
+                                    WidthRequest="32"
+                                    HeightRequest="32"
                                     StrokeThickness="0"
-                                    Padding="9"
+                                    Padding="6"
                                     x:Name="DeleteButton">
                                 <Border.Shadow>
                                     <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
                                 </Border.Shadow>
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
+                                    <RoundRectangle CornerRadius="6" />
                                 </Border.StrokeShape>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding DeleteSelectedFilesCommand}"
