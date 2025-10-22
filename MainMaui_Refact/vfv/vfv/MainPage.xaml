@@ -26,16 +26,19 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="16" RowSpacing="16">
+    <Grid Padding="20" RowSpacing="20" BackgroundColor="#FAFAFA">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="128" />
+            <RowDefinition Height="140" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Top Toolbar -->
-        <Frame Grid.Row="0" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" CornerRadius="4" Padding="12" HasShadow="False" StyleClass="card-muted">
+        <Frame Grid.Row="0" BackgroundColor="White" BorderColor="#E5E7EB" CornerRadius="8" Padding="16" HasShadow="True" StyleClass="card-muted">
+            <Frame.Shadow>
+                <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
+            </Frame.Shadow>
             <Grid ColumnSpacing="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -43,25 +46,33 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Left side buttons -->
-                <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                <HorizontalStackLayout Grid.Column="0" Spacing="12">
                     <Button Text="Open File"
                             BackgroundColor="White"
-                            TextColor="#333"
-                            BorderColor="#D9D9D9"
+                            TextColor="#1F1F1F"
+                            BorderColor="#E0E0E0"
                             BorderWidth="1"
-                            CornerRadius="4"
+                            CornerRadius="6"
+                            Padding="12,8"
                             StyleClass="outline"
                             ImageSource="folder_open.png"
-                            Command="{Binding OpenFileCommand}" />
+                            Command="{Binding OpenFileCommand}">
+                        <Button.Shadow>
+                            <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                        </Button.Shadow>
+                    </Button>
 
-                    <Border BackgroundColor="#00CC00"
-                            WidthRequest="40"
-                            HeightRequest="40"
+                    <Border BackgroundColor="#10B981"
+                            WidthRequest="42"
+                            HeightRequest="42"
                             StrokeThickness="0"
-                            Padding="8"
+                            Padding="9"
                             IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}">
+                        <Border.Shadow>
+                            <Shadow Brush="#10B981" Offset="0,2" Radius="4" Opacity="0.3" />
+                        </Border.Shadow>
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="4" />
+                            <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding StartExecutionCommand}" />
@@ -72,14 +83,17 @@
                                HorizontalOptions="Center" />
                     </Border>
 
-                    <Border BackgroundColor="#CC0000"
-                            WidthRequest="40"
-                            HeightRequest="40"
+                    <Border BackgroundColor="#EF4444"
+                            WidthRequest="42"
+                            HeightRequest="42"
                             StrokeThickness="0"
-                            Padding="8"
+                            Padding="9"
                             IsEnabled="{Binding IsExecuting}">
+                        <Border.Shadow>
+                            <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
+                        </Border.Shadow>
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="4" />
+                            <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding StopExecutionCommand}" />
@@ -104,49 +118,67 @@
                 </HorizontalStackLayout>
 
                 <!-- Right side buttons -->
-                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                <HorizontalStackLayout Grid.Column="1" Spacing="12">
                     <Button Text="Tools"
                             BackgroundColor="White"
-                            TextColor="#333"
-                            BorderColor="#D9D9D9"
+                            TextColor="#1F1F1F"
+                            BorderColor="#E0E0E0"
                             BorderWidth="1"
-                            CornerRadius="4"
+                            CornerRadius="6"
+                            Padding="12,8"
                             StyleClass="outline"
                             ImageSource="wrench.png"
-                            Clicked="OnToolsClicked" />
+                            Clicked="OnToolsClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                        </Button.Shadow>
+                    </Button>
 
                     <Button Text="Settings"
                             BackgroundColor="White"
-                            TextColor="#333"
-                            BorderColor="#D9D9D9"
+                            TextColor="#1F1F1F"
+                            BorderColor="#E0E0E0"
                             BorderWidth="1"
-                            CornerRadius="4"
+                            CornerRadius="6"
+                            Padding="12,8"
                             StyleClass="outline"
                             ImageSource="settings.png"
-                            Command="{Binding OpenSettingsCommand}" />
+                            Command="{Binding OpenSettingsCommand}">
+                        <Button.Shadow>
+                            <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                        </Button.Shadow>
+                    </Button>
 
                     <Button Text="Help"
                             BackgroundColor="White"
-                            TextColor="#333"
-                            BorderColor="#D9D9D9"
+                            TextColor="#1F1F1F"
+                            BorderColor="#E0E0E0"
                             BorderWidth="1"
-                            CornerRadius="4"
+                            CornerRadius="6"
+                            Padding="12,8"
                             StyleClass="outline"
                             ImageSource="help_circle.png"
-                            Clicked="OnHelpClicked" />
+                            Clicked="OnHelpClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#E0E0E0" Offset="0,1" Radius="2" Opacity="0.1" />
+                        </Button.Shadow>
+                    </Button>
                 </HorizontalStackLayout>
             </Grid>
         </Frame>
 
         <!-- Main Content Area -->
-        <Grid Grid.Row="1" ColumnSpacing="16">
+        <Grid Grid.Row="1" ColumnSpacing="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- File List -->
-            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#D9D9D9" Padding="0" HasShadow="False" StyleClass="card">
+            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#E5E7EB" Padding="0" HasShadow="True" CornerRadius="8" StyleClass="card">
+                <Frame.Shadow>
+                    <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
+                </Frame.Shadow>
                 <Grid RowSpacing="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -155,13 +187,13 @@
 
                     <!-- Files ScrollView -->
                     <ScrollView Grid.Row="0">
-                        <VerticalStackLayout Padding="16" Spacing="4" BindableLayout.ItemsSource="{Binding Files}">
+                        <VerticalStackLayout Padding="16" Spacing="6" BindableLayout.ItemsSource="{Binding Files}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
-                                    <Frame Padding="12"
+                                    <Frame Padding="14"
                                            BackgroundColor="{Binding IsActive, Converter={StaticResource FileActiveBackgroundConverter}}"
                                            BorderColor="Transparent"
-                                           CornerRadius="4"
+                                           CornerRadius="6"
                                            HasShadow="False">
                                         <Frame.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=SelectFileCommand}"
@@ -208,8 +240,8 @@
 
                     <!-- File List Footer -->
                     <Frame Grid.Row="1"
-                           BackgroundColor="White"
-                           BorderColor="#D9D9D9"
+                           BackgroundColor="#F9FAFB"
+                           BorderColor="Transparent"
                            Padding="12"
                            HasShadow="False"
                            CornerRadius="0">
@@ -242,13 +274,16 @@
                             </HorizontalStackLayout>
 
                             <Border Grid.Column="1"
-                                    BackgroundColor="#CC0000"
-                                    WidthRequest="40"
-                                    HeightRequest="40"
+                                    BackgroundColor="#EF4444"
+                                    WidthRequest="42"
+                                    HeightRequest="42"
                                     StrokeThickness="0"
-                                    Padding="8">
+                                    Padding="9">
+                                <Border.Shadow>
+                                    <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
+                                </Border.Shadow>
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="4" />
+                                    <RoundRectangle CornerRadius="8" />
                                 </Border.StrokeShape>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding DeleteSelectedFilesCommand}" />
@@ -264,7 +299,10 @@
             </Frame>
 
             <!-- File Details -->
-            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="#D9D9D9" Padding="24" HasShadow="False" StyleClass="card">
+            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="#E5E7EB" Padding="24" HasShadow="True" CornerRadius="8" StyleClass="card">
+                <Frame.Shadow>
+                    <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
+                </Frame.Shadow>
                 <Grid RowSpacing="24" IsVisible="{Binding ActiveFile, Converter={StaticResource IsNotNullConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -334,7 +372,10 @@
         </Grid>
 
         <!-- Error Panel -->
-        <Frame Grid.Row="2" BackgroundColor="White" BorderColor="#D9D9D9" Padding="16" HasShadow="False" StyleClass="card">
+        <Frame Grid.Row="2" BackgroundColor="White" BorderColor="#E5E7EB" Padding="16" HasShadow="True" CornerRadius="8" StyleClass="card">
+            <Frame.Shadow>
+                <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
+            </Frame.Shadow>
             <ScrollView>
                 <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Errors}">
                     <BindableLayout.EmptyView>
@@ -347,10 +388,11 @@
 
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="x:String">
-                            <Frame BackgroundColor="White"
-                                   BorderColor="#CC0000"
-                                   Padding="12"
+                            <Frame BackgroundColor="#FEF2F2"
+                                   BorderColor="#FCA5A5"
+                                   Padding="14"
                                    HasShadow="False"
+                                   CornerRadius="6"
                                    StyleClass="alert-error">
                                 <Grid ColumnSpacing="8">
                                     <Grid.ColumnDefinitions>
@@ -389,7 +431,10 @@
         </Frame>
 
         <!-- Footer with Progress -->
-        <Frame Grid.Row="3" BackgroundColor="#F0F0F0" BorderColor="#D9D9D9" Padding="8" HasShadow="False" StyleClass="card-muted">
+        <Frame Grid.Row="3" BackgroundColor="White" BorderColor="#E5E7EB" Padding="16" HasShadow="True" CornerRadius="8" StyleClass="card-muted">
+            <Frame.Shadow>
+                <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
+            </Frame.Shadow>
             <Grid ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
