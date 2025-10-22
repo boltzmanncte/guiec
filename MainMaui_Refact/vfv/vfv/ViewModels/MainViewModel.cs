@@ -25,6 +25,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private int progress;
 
+    [ObservableProperty]
+    private int selectedFilesCount;
+
     public MainViewModel()
     {
         // Initialize with mock data
@@ -84,6 +87,32 @@ public partial class MainViewModel : ObservableObject
                 Size = "2.9 KB",
                 Modified = "2025-10-05 15:30"
             }
+        };
+
+        // Subscribe to PropertyChanged for all existing items
+        foreach (var file in Files)
+        {
+            file.PropertyChanged += FileItem_PropertyChanged;
+        }
+
+        // Subscribe to collection changes for future additions/removals
+        Files.CollectionChanged += (s, e) =>
+        {
+            if (e.NewItems != null)
+            {
+                foreach (FileItem item in e.NewItems)
+                {
+                    item.PropertyChanged += FileItem_PropertyChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (FileItem item in e.OldItems)
+                {
+                    item.PropertyChanged -= FileItem_PropertyChanged;
+                }
+            }
+            UpdateSelectedFilesCount();
         };
     }
 
@@ -253,5 +282,18 @@ public partial class MainViewModel : ObservableObject
     {
         // TODO: Implement About
         await Task.CompletedTask;
+    }
+
+    private void FileItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FileItem.IsSelected))
+        {
+            UpdateSelectedFilesCount();
+        }
+    }
+
+    private void UpdateSelectedFilesCount()
+    {
+        SelectedFilesCount = Files.Count(f => f.IsSelected);
     }
 }

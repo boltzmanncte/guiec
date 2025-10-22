@@ -23,6 +23,7 @@
             <converters:ProgressPercentConverter x:Key="ProgressPercentConverter" />
             <converters:ProgressTextConverter x:Key="ProgressTextConverter" />
             <converters:DeleteButtonTextConverter x:Key="DeleteButtonTextConverter" />
+            <converters:SelectedFilesCountTextConverter x:Key="SelectedFilesCountTextConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
