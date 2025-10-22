@@ -258,8 +258,10 @@
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
+                                        Padding="8,4"
                                         StyleClass="outline"
                                         ImageSource="chevron_up.png"
+                                        ContentLayout="Left,4"
                                         Command="{Binding MoveFileUpCommand}" />
 
                                 <Button Text="Move Down"
@@ -268,8 +270,10 @@
                                         BorderColor="#D9D9D9"
                                         BorderWidth="1"
                                         CornerRadius="4"
+                                        Padding="8,4"
                                         StyleClass="outline"
                                         ImageSource="chevron_down.png"
+                                        ContentLayout="Left,4"
                                         Command="{Binding MoveFileDownCommand}" />
                             </HorizontalStackLayout>
 
