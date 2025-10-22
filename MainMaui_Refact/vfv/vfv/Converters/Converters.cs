@@ -75,7 +75,7 @@ public class DeclarationModeStatusConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return value is bool isDeclarationMode && isDeclarationMode
-            ? "Ready for declaration 🎉"
+            ? "Ready for declaration"
             : "⚠️ Engineering mode is active";
     }
 

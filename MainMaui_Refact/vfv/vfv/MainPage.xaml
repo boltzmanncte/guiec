@@ -62,51 +62,39 @@
                         </Button.Shadow>
                     </Button>
 
-                    <Border BackgroundColor="#10B981"
+                    <Button BackgroundColor="#10B981"
+                            TextColor="White"
+                            BorderWidth="0"
+                            CornerRadius="6"
                             WidthRequest="36"
                             HeightRequest="36"
-                            StrokeThickness="0"
-                            Padding="8"
-                            x:Name="PlayButton"
-                            IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}">
-                        <Border.Shadow>
+                            Padding="0"
+                            ImageSource="play.png"
+                            Command="{Binding StartExecutionCommand}"
+                            IsEnabled="{Binding IsExecuting, Converter={StaticResource InvertedBoolConverter}}"
+                            Pressed="OnButtonPressed"
+                            Released="OnButtonReleased">
+                        <Button.Shadow>
                             <Shadow Brush="#10B981" Offset="0,2" Radius="4" Opacity="0.3" />
-                        </Border.Shadow>
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6" />
-                        </Border.StrokeShape>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding StartExecutionCommand}"
-                                                Tapped="OnIconButtonTapped" />
-                        </Border.GestureRecognizers>
-                        <Image Source="play.png"
-                               Aspect="AspectFit"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center" />
-                    </Border>
+                        </Button.Shadow>
+                    </Button>
 
-                    <Border BackgroundColor="#EF4444"
+                    <Button BackgroundColor="#EF4444"
+                            TextColor="White"
+                            BorderWidth="0"
+                            CornerRadius="6"
                             WidthRequest="36"
                             HeightRequest="36"
-                            StrokeThickness="0"
-                            Padding="8"
-                            x:Name="StopButton"
-                            IsEnabled="{Binding IsExecuting}">
-                        <Border.Shadow>
+                            Padding="0"
+                            ImageSource="square.png"
+                            Command="{Binding StopExecutionCommand}"
+                            IsEnabled="{Binding IsExecuting}"
+                            Pressed="OnButtonPressed"
+                            Released="OnButtonReleased">
+                        <Button.Shadow>
                             <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
-                        </Border.Shadow>
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6" />
-                        </Border.StrokeShape>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding StopExecutionCommand}"
-                                                Tapped="OnIconButtonTapped" />
-                        </Border.GestureRecognizers>
-                        <Image Source="square.png"
-                               Aspect="AspectFit"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center" />
-                    </Border>
+                        </Button.Shadow>
+                    </Button>
 
                     <Button Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextConverter}}"
                             BackgroundColor="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeColorConverter}}"
@@ -314,28 +302,25 @@
                                 </Button>
                             </HorizontalStackLayout>
 
-                            <Border Grid.Column="1"
+                            <Button Grid.Column="1"
                                     BackgroundColor="#EF4444"
-                                    WidthRequest="32"
+                                    TextColor="White"
+                                    BorderWidth="0"
+                                    CornerRadius="6"
                                     HeightRequest="32"
-                                    StrokeThickness="0"
-                                    Padding="6"
-                                    x:Name="DeleteButton">
-                                <Border.Shadow>
+                                    Padding="6,6"
+                                    FontSize="14"
+                                    ImageSource="trash_2.png"
+                                    Command="{Binding DeleteSelectedFilesCommand}"
+                                    Pressed="OnButtonPressed"
+                                    Released="OnButtonReleased">
+                                <Button.Text>
+                                    <Binding Path="SelectedFilesCount" Converter="{StaticResource SelectedFilesCountTextConverter}" />
+                                </Button.Text>
+                                <Button.Shadow>
                                     <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
-                                </Border.Shadow>
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6" />
-                                </Border.StrokeShape>
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding DeleteSelectedFilesCommand}"
-                                                        Tapped="OnIconButtonTapped" />
-                                </Border.GestureRecognizers>
-                                <Image Source="trash_2.png"
-                                       Aspect="AspectFit"
-                                       VerticalOptions="Center"
-                                       HorizontalOptions="Center" />
-                            </Border>
+                                </Button.Shadow>
+                            </Button>
                         </Grid>
                     </Frame>
                 </Grid>
