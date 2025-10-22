@@ -52,5 +52,45 @@ namespace vfv
 					break;
 			}
 		}
+
+		private async void OnIconButtonTapped(object sender, EventArgs e)
+		{
+			if (sender is Border border)
+			{
+				// Animate scale down and opacity
+				await Task.WhenAll(
+					border.ScaleTo(0.95, 50, Easing.CubicOut),
+					border.FadeTo(0.8, 50, Easing.CubicOut)
+				);
+
+				// Animate back to normal
+				await Task.WhenAll(
+					border.ScaleTo(1.0, 100, Easing.CubicOut),
+					border.FadeTo(1.0, 100, Easing.CubicOut)
+				);
+			}
+		}
+
+		private async void OnButtonPressed(object sender, EventArgs e)
+		{
+			if (sender is Button button)
+			{
+				await Task.WhenAll(
+					button.ScaleTo(0.95, 50, Easing.CubicOut),
+					button.FadeTo(0.8, 50, Easing.CubicOut)
+				);
+			}
+		}
+
+		private async void OnButtonReleased(object sender, EventArgs e)
+		{
+			if (sender is Button button)
+			{
+				await Task.WhenAll(
+					button.ScaleTo(1.0, 100, Easing.CubicOut),
+					button.FadeTo(1.0, 100, Easing.CubicOut)
+				);
+			}
+		}
 	}
 }
