@@ -35,11 +35,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Toolbar -->
-        <Frame Grid.Row="0" BackgroundColor="White" BorderColor="#E5E7EB" CornerRadius="8" Padding="16" HasShadow="True" StyleClass="card-muted">
-            <Frame.Shadow>
-                <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
-            </Frame.Shadow>
-            <Grid ColumnSpacing="8">
+        <Grid Grid.Row="0" ColumnSpacing="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -164,8 +160,7 @@
                         </Button.Shadow>
                     </Button>
                 </HorizontalStackLayout>
-            </Grid>
-        </Frame>
+        </Grid>
 
         <!-- Main Content Area -->
         <Grid Grid.Row="1" ColumnSpacing="20">
