@@ -187,10 +187,10 @@
 
                     <!-- Files ScrollView -->
                     <ScrollView Grid.Row="0">
-                        <VerticalStackLayout Padding="16" Spacing="6" BindableLayout.ItemsSource="{Binding Files}">
+                        <VerticalStackLayout Padding="16" Spacing="2" BindableLayout.ItemsSource="{Binding Files}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
-                                    <Frame Padding="14"
+                                    <Frame Padding="6"
                                            BackgroundColor="{Binding IsActive, Converter={StaticResource FileActiveBackgroundConverter}}"
                                            BorderColor="Transparent"
                                            CornerRadius="6"
