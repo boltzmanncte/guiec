@@ -11,7 +11,6 @@ namespace vfv.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly FileCache _fileCache;
     private readonly FileListPersistence _persistence;
     private bool _isInitializing = true;
 
@@ -38,7 +37,6 @@ public partial class MainViewModel : ObservableObject
 
     public MainViewModel()
     {
-        _fileCache = new FileCache(maxCacheSize: 50, cacheExpirationMinutes: 30);
         _persistence = new FileListPersistence();
 
         // Subscribe to collection changes for future additions/removals
@@ -56,8 +54,6 @@ public partial class MainViewModel : ObservableObject
                 foreach (FileItem item in e.OldItems)
                 {
                     item.PropertyChanged -= FileItem_PropertyChanged;
-                    // Remove from cache when file is removed
-                    _fileCache.Remove(item.FilePath);
                 }
             }
             UpdateSelectedFilesCount();
@@ -96,68 +92,13 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SelectFile(FileItem file)
+    private void SelectFile(FileItem file)
     {
         if (ActiveFile != null)
             ActiveFile.IsActive = false;
 
         file.IsActive = true;
         ActiveFile = file;
-
-        // Load file content into cache when selected
-        await LoadFileContent(file);
-    }
-
-    private async Task LoadFileContent(FileItem file)
-    {
-        try
-        {
-            // Check if content is already in cache
-            if (_fileCache.TryGet(file.FilePath, out var cachedContent))
-            {
-                file.IsCached = true;
-                return;
-            }
-
-            // Load file content from disk
-            if (File.Exists(file.FilePath))
-            {
-                var content = await File.ReadAllTextAsync(file.FilePath);
-                _fileCache.AddOrUpdate(file.FilePath, content);
-                file.IsCached = true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Errors.Add($"Error loading file content for '{file.Name}': {ex.Message}");
-            file.IsCached = false;
-        }
-    }
-
-    public async Task<string?> GetFileContent(string filePath)
-    {
-        // Try to get from cache first
-        if (_fileCache.TryGet(filePath, out var content))
-        {
-            return content;
-        }
-
-        // Load from disk if not in cache
-        try
-        {
-            if (File.Exists(filePath))
-            {
-                content = await File.ReadAllTextAsync(filePath);
-                _fileCache.AddOrUpdate(filePath, content);
-                return content;
-            }
-        }
-        catch (Exception ex)
-        {
-            Errors.Add($"Error reading file: {ex.Message}");
-        }
-
-        return null;
     }
 
     [RelayCommand]
@@ -391,22 +332,6 @@ public partial class MainViewModel : ObservableObject
     {
         SelectedFilesCount = Files.Count(f => f.IsSelected);
     }
-
-    [RelayCommand]
-    private void ClearCache()
-    {
-        _fileCache.Clear();
-        foreach (var file in Files)
-        {
-            file.IsCached = false;
-        }
-    }
-
-    public int CachedFilesCount => _fileCache.Count;
-
-    public long TotalCacheSize => _fileCache.TotalCacheSize;
-
-    public IEnumerable<CachedFileInfo> GetCachedFiles() => _fileCache.GetCachedFiles();
 
 #if WINDOWS
     public async Task AddFilesFromDrop(IEnumerable<IStorageFile> storageFiles)

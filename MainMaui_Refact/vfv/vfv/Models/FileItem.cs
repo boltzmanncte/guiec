@@ -31,9 +31,6 @@ public partial class FileItem : ObservableObject
     [ObservableProperty]
     private bool isActive;
 
-    [ObservableProperty]
-    private bool isCached;
-
     public Color IconColor => Extension.ToLower() switch
     {
         "xml" => Color.FromArgb("#FF6600"),
