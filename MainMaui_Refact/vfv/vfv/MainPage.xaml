@@ -24,6 +24,7 @@
             <converters:ProgressTextConverter x:Key="ProgressTextConverter" />
             <converters:DeleteButtonTextConverter x:Key="DeleteButtonTextConverter" />
             <converters:SelectedFilesCountTextConverter x:Key="SelectedFilesCountTextConverter" />
+            <converters:HasSelectedFilesConverter x:Key="HasSelectedFilesConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -65,7 +66,8 @@
 
                     <Button BackgroundColor="#10B981"
                             TextColor="White"
-                            BorderWidth="0"
+                            BorderColor="#E0E0E0"
+                            BorderWidth="1"
                             CornerRadius="6"
                             WidthRequest="36"
                             HeightRequest="36"
@@ -78,11 +80,33 @@
                         <Button.Shadow>
                             <Shadow Brush="#10B981" Offset="0,2" Radius="4" Opacity="0.3" />
                         </Button.Shadow>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="VisualStateManager.VisualStateGroups">
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#10B981" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#6EE7B7" />
+                                                    <Setter Property="Opacity" Value="0.6" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
                     </Button>
 
                     <Button BackgroundColor="#EF4444"
                             TextColor="White"
-                            BorderWidth="0"
+                            BorderColor="#E0E0E0"
+                            BorderWidth="1"
                             CornerRadius="6"
                             WidthRequest="36"
                             HeightRequest="36"
@@ -95,6 +119,27 @@
                         <Button.Shadow>
                             <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
                         </Button.Shadow>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="VisualStateManager.VisualStateGroups">
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#EF4444" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#FCA5A5" />
+                                                    <Setter Property="Opacity" Value="0.6" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
                     </Button>
 
                     <Button Text="{Binding IsDeclarationMode, Converter={StaticResource DeclarationModeTextConverter}}"
@@ -306,13 +351,15 @@
                             <Button Grid.Column="1"
                                     BackgroundColor="#EF4444"
                                     TextColor="White"
-                                    BorderWidth="0"
+                                    BorderColor="#E0E0E0"
+                                    BorderWidth="1"
                                     CornerRadius="6"
                                     HeightRequest="36"
                                     Padding="6,6"
                                     FontSize="14"
                                     ImageSource="trash_2.png"
                                     Command="{Binding DeleteSelectedFilesCommand}"
+                                    IsEnabled="{Binding SelectedFilesCount, Converter={StaticResource HasSelectedFilesConverter}}"
                                     Pressed="OnButtonPressed"
                                     Released="OnButtonReleased">
                                 <Button.Text>
@@ -321,6 +368,27 @@
                                 <Button.Shadow>
                                     <Shadow Brush="#EF4444" Offset="0,2" Radius="4" Opacity="0.3" />
                                 </Button.Shadow>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor" Value="#EF4444" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Disabled">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor" Value="#FCA5A5" />
+                                                            <Setter Property="Opacity" Value="0.6" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
                             </Button>
                         </Grid>
                     </Frame>
