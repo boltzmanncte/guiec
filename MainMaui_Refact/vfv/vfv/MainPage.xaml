@@ -25,6 +25,7 @@
             <converters:DeleteButtonTextConverter x:Key="DeleteButtonTextConverter" />
             <converters:SelectedFilesCountTextConverter x:Key="SelectedFilesCountTextConverter" />
             <converters:HasSelectedFilesConverter x:Key="HasSelectedFilesConverter" />
+            <converters:SingleOrNoFileSelectedConverter x:Key="SingleOrNoFileSelectedConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -319,6 +320,7 @@
                                         ImageSource="chevron_up.png"
                                         ContentLayout="Left,4"
                                         Command="{Binding MoveFileUpCommand}"
+                                        IsEnabled="{Binding SelectedFilesCount, Converter={StaticResource SingleOrNoFileSelectedConverter}}"
                                         Pressed="OnButtonPressed"
                                         Released="OnButtonReleased">
                                     <Button.Shadow>
@@ -340,6 +342,7 @@
                                         ImageSource="chevron_down.png"
                                         ContentLayout="Left,4"
                                         Command="{Binding MoveFileDownCommand}"
+                                        IsEnabled="{Binding SelectedFilesCount, Converter={StaticResource SingleOrNoFileSelectedConverter}}"
                                         Pressed="OnButtonPressed"
                                         Released="OnButtonReleased">
                                     <Button.Shadow>
