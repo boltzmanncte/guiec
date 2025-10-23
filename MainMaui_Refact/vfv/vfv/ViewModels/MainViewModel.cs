@@ -2,6 +2,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using vfv.Models;
+#if WINDOWS
+using Windows.Storage;
+#endif
 
 namespace vfv.ViewModels;
 
@@ -72,7 +75,7 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            var customFileTypes = new FilePickerFileType(
+			var customFileTypes = new FilePickerFileType(
                 new Dictionary<DevicePlatform, IEnumerable<string>>
                 {
                     { DevicePlatform.WinUI, new[] { ".xml", ".vecto" } },
@@ -86,7 +89,7 @@ public partial class MainViewModel : ObservableObject
                 FileTypes = customFileTypes
             };
 
-            var results = await FilePicker.Default.PickMultipleAsync(options);
+			var results = await FilePicker.Default.PickMultipleAsync(options);
 
             if (results != null)
             {
@@ -292,4 +295,53 @@ public partial class MainViewModel : ObservableObject
     {
         SelectedFilesCount = Files.Count(f => f.IsSelected);
     }
+
+#if WINDOWS
+    public async Task AddFilesFromDrop(IEnumerable<IStorageFile> storageFiles)
+    {
+        try
+        {
+            foreach (var storageFile in storageFiles)
+            {
+                // Get file extension
+                var extension = Path.GetExtension(storageFile.Path).TrimStart('.');
+
+                // Filter only XML and JSON files
+                if (extension.ToLower() != "xml" && extension.ToLower() != "json")
+                {
+                    Errors.Add($"File '{storageFile.Name}' is not a supported file type (xml or json)");
+                    continue;
+                }
+
+                // Check if file already exists in the list
+                if (Files.Any(f => f.Name == storageFile.Name))
+                {
+                    Errors.Add($"File '{storageFile.Name}' is already in the list");
+                    continue;
+                }
+
+                var fileInfo = new FileInfo(storageFile.Path);
+
+                var fileItem = new FileItem
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = storageFile.Name,
+                    Extension = extension,
+                    Description = $"Imported file from {fileInfo.DirectoryName}",
+                    Size = FormatFileSize(fileInfo.Length),
+                    Modified = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm"),
+                    FilePath = storageFile.Path
+                };
+
+                Files.Add(fileItem);
+            }
+        }
+        catch (Exception ex)
+        {
+            Errors.Add($"Error processing dropped files: {ex.Message}");
+        }
+
+        await Task.CompletedTask;
+    }
+#endif
 }

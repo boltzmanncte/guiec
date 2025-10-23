@@ -230,10 +230,16 @@
             </Grid.ColumnDefinitions>
 
             <!-- File List -->
-            <Frame Grid.Column="0" BackgroundColor="White" BorderColor="#E5E7EB" Padding="0" HasShadow="True" CornerRadius="8" StyleClass="card">
+            <Frame x:Name="FileListFrame" Grid.Column="0" BackgroundColor="White" BorderColor="#E5E7EB" Padding="0" HasShadow="True" CornerRadius="8" StyleClass="card">
                 <Frame.Shadow>
                     <Shadow Brush="#E0E0E0" Offset="0,2" Radius="8" Opacity="0.3" />
                 </Frame.Shadow>
+                <Frame.GestureRecognizers>
+                    <DropGestureRecognizer AllowDrop="True"
+                                          DragOver="OnDragOver"
+                                          Drop="OnDrop"
+                                          DragLeave="OnDragLeave" />
+                </Frame.GestureRecognizers>
                 <Grid RowSpacing="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />

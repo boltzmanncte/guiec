@@ -1,4 +1,9 @@
 using vfv.ViewModels;
+#if WINDOWS
+using Windows.Storage;
+using Windows.ApplicationModel.DataTransfer;
+using WinRT;
+#endif
 
 namespace vfv
 {
@@ -90,6 +95,82 @@ namespace vfv
 					button.ScaleTo(1.0, 100, Easing.CubicOut),
 					button.FadeTo(1.0, 100, Easing.CubicOut)
 				);
+			}
+		}
+
+		private void OnDragOver(object sender, DragEventArgs e)
+		{
+#if WINDOWS
+			try
+			{
+				// Check if we have platform-specific drag event args
+				if (e.PlatformArgs?.DragEventArgs != null)
+				{
+					var winArgs = e.PlatformArgs.DragEventArgs.As<Microsoft.UI.Xaml.DragEventArgs>();
+					if (winArgs?.DataView != null && winArgs.DataView.Contains(StandardDataFormats.StorageItems))
+					{
+						winArgs.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+						e.AcceptedOperation = Microsoft.Maui.Controls.DataPackageOperation.Copy;
+
+						// Visual feedback - change border color
+						if (sender is Frame frame)
+						{
+							frame.BorderColor = Color.FromArgb("#003399");
+						}
+						return;
+					}
+				}
+			}
+			catch
+			{
+				// Silently fail and reject the drop
+			}
+#endif
+			e.AcceptedOperation = Microsoft.Maui.Controls.DataPackageOperation.None;
+		}
+
+		private void OnDragLeave(object sender, DragEventArgs e)
+		{
+			// Reset visual feedback
+			if (sender is Frame frame)
+			{
+				frame.BorderColor = Color.FromArgb("#E5E7EB");
+			}
+		}
+
+		private async void OnDrop(object sender, DropEventArgs e)
+		{
+			// Reset visual feedback
+			if (sender is Frame frame)
+			{
+				frame.BorderColor = Color.FromArgb("#E5E7EB");
+			}
+
+			try
+			{
+#if WINDOWS
+				if (e.PlatformArgs?.DragEventArgs != null)
+				{
+					var winArgs = e.PlatformArgs.DragEventArgs.As<Microsoft.UI.Xaml.DragEventArgs>();
+					if (winArgs?.DataView != null && winArgs.DataView.Contains(StandardDataFormats.StorageItems))
+					{
+						var items = await winArgs.DataView.GetStorageItemsAsync();
+						var files = items.OfType<IStorageFile>();
+
+						if (files.Any())
+						{
+							await _viewModel.AddFilesFromDrop(files);
+						}
+					}
+				}
+#else
+				_viewModel.Errors.Add("Drag and drop is only supported on Windows");
+				await Task.CompletedTask;
+#endif
+			}
+			catch (Exception ex)
+			{
+				_viewModel.Errors.Add($"Error dropping files: {ex.Message}");
 			}
 		}
 	}
