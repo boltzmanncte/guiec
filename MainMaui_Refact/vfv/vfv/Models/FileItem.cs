@@ -23,6 +23,9 @@ public partial class FileItem : ObservableObject
     private string modified = string.Empty;
 
     [ObservableProperty]
+    private string filePath = string.Empty;
+
+    [ObservableProperty]
     private bool isSelected;
 
     [ObservableProperty]

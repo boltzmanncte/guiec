@@ -30,71 +30,6 @@ public partial class MainViewModel : ObservableObject
 
     public MainViewModel()
     {
-        // Initialize with mock data
-        Files = new ObservableCollection<FileItem>
-        {
-            new FileItem
-            {
-                Id = "1",
-                Name = "config.xml",
-                Extension = "xml",
-                Description = "Configuration file containing application settings and parameters.",
-                Size = "2.4 KB",
-                Modified = "2025-10-08 14:30"
-            },
-            new FileItem
-            {
-                Id = "2",
-                Name = "data.json",
-                Extension = "json",
-                Description = "JSON data file with user preferences and application state.",
-                Size = "5.1 KB",
-                Modified = "2025-10-08 12:15"
-            },
-            new FileItem
-            {
-                Id = "3",
-                Name = "schema.xml",
-                Extension = "xml",
-                Description = "XML schema definition for data validation and structure.",
-                Size = "3.8 KB",
-                Modified = "2025-10-07 16:45"
-            },
-            new FileItem
-            {
-                Id = "4",
-                Name = "settings.json",
-                Extension = "json",
-                Description = "Application settings stored in JSON format.",
-                Size = "1.2 KB",
-                Modified = "2025-10-07 09:20"
-            },
-            new FileItem
-            {
-                Id = "5",
-                Name = "declaration.xml",
-                Extension = "xml",
-                Description = "Declaration file defining application components and dependencies.",
-                Size = "4.5 KB",
-                Modified = "2025-10-06 11:00"
-            },
-            new FileItem
-            {
-                Id = "6",
-                Name = "manifest.json",
-                Extension = "json",
-                Description = "Manifest file containing metadata and configuration.",
-                Size = "2.9 KB",
-                Modified = "2025-10-05 15:30"
-            }
-        };
-
-        // Subscribe to PropertyChanged for all existing items
-        foreach (var file in Files)
-        {
-            file.PropertyChanged += FileItem_PropertyChanged;
-        }
-
         // Subscribe to collection changes for future additions/removals
         Files.CollectionChanged += (s, e) =>
         {
@@ -135,8 +70,69 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenFile()
     {
-        // TODO: Implement file opening logic
-        await Task.CompletedTask;
+        try
+        {
+            var customFileTypes = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.WinUI, new[] { ".xml", ".vecto" } },
+                    { DevicePlatform.Android, new[] { "text/xml", "application/xml", "application/vecto" } },
+                    { DevicePlatform.macOS, new[] { "xml", "vecto" } }
+                });
+
+            var options = new PickOptions
+            {
+                PickerTitle = "Please select files",
+                FileTypes = customFileTypes
+            };
+
+            var results = await FilePicker.Default.PickMultipleAsync(options);
+
+            if (results != null)
+            {
+                foreach (var result in results)
+                {
+                    var fileInfo = new FileInfo(result.FullPath);
+
+                    // Check if file already exists in the list
+                    if (Files.Any(f => f.Name == result.FileName))
+                    {
+                        Errors.Add($"File '{result.FileName}' is already in the list");
+                        continue;
+                    }
+
+                    var fileItem = new FileItem
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = result.FileName,
+                        Extension = fileInfo.Extension.TrimStart('.'),
+                        Description = $"Imported file from {fileInfo.DirectoryName}",
+                        Size = FormatFileSize(fileInfo.Length),
+                        Modified = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm"),
+                        FilePath = result.FullPath
+                    };
+
+                    Files.Add(fileItem);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Errors.Add($"Error opening files: {ex.Message}");
+        }
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:0.#} {sizes[order]}";
     }
 
     [RelayCommand]
