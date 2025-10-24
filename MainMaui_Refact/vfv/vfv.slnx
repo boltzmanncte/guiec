@@ -1,0 +1,18 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Deploy" />
+    <BuildType Name="Release" />
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/vfv.Tests/">
+    <Project Path="vfv.Tests/vfv.GUIntegrationTests/vfv.GUIntegrationTests.csproj">
+      <BuildType Solution="Deploy|*" Project="Release" />
+    </Project>
+  </Folder>
+  <Project Path="vfv/vfv.csproj">
+    <Deploy Solution="*|Any CPU" />
+  </Project>
+</Solution>
