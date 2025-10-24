@@ -8,10 +8,21 @@ public class FileListPersistence
     private readonly string _storageFilePath;
     private const string StorageFileName = "fileList.json";
 
+    /// <summary>
+    /// Default constructor for production use - uses MAUI FileSystem
+    /// </summary>
     public FileListPersistence()
+        : this(Path.Combine(FileSystem.AppDataDirectory, StorageFileName))
     {
-        var appDataPath = FileSystem.AppDataDirectory;
-        _storageFilePath = Path.Combine(appDataPath, StorageFileName);
+    }
+
+    /// <summary>
+    /// Constructor with custom storage path - primarily for testing
+    /// </summary>
+    /// <param name="storageFilePath">Full path to the storage file</param>
+    public FileListPersistence(string storageFilePath)
+    {
+        _storageFilePath = storageFilePath;
     }
 
     public async Task SaveFileListAsync(IEnumerable<FileItem> files)
