@@ -28,10 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\vfv\vfv.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>compile</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\vfv\vfv.csproj" />
   </ItemGroup>
 
 </Project>
