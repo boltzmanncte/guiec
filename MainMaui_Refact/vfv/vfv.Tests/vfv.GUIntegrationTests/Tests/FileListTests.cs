@@ -7,13 +7,13 @@ namespace vfv.GUIntegrationTests.Tests;
 /// </summary>
 public class FileListTests : AppiumTestBase
 {
-    private const string AppPath = "vfv"; // Update this with actual app path or Package Family Name
+    private static string AppPath => Path.Combine(AssemblyDirectory.Replace(@"vfv.Tests\vfv.GUIntegrationTests", @"vfv"), @"win10-x64\vfv.exe");
 
-    [Fact(Skip = "Requires WinAppDriver to be running")]
+	[Fact]
     public void OpenFile_WhenFileSelected_ShouldAddToFileList()
     {
-        // Arrange
-        InitializeSession(AppPath);
+		// Arrange
+		InitializeSession(AppPath);
 
         // Act
         var openFileButton = WaitForElement(By.Name("Open File"));
@@ -26,7 +26,7 @@ public class FileListTests : AppiumTestBase
         // Add assertions based on your application behavior
     }
 
-    [Fact(Skip = "Requires WinAppDriver to be running")]
+    [Fact]
     public void DeleteSelectedFiles_WhenFilesSelected_ShouldRemoveFromList()
     {
         // Arrange
@@ -39,7 +39,7 @@ public class FileListTests : AppiumTestBase
         // Verify files are removed
     }
 
-    [Fact(Skip = "Requires WinAppDriver to be running")]
+    [Fact]
     public void MoveFileUp_WhenFileSelected_ShouldChangePosition()
     {
         // Arrange
@@ -52,7 +52,7 @@ public class FileListTests : AppiumTestBase
         // Verify file position changed
     }
 
-    [Fact(Skip = "Requires WinAppDriver to be running")]
+    [Fact]
     public void MoveFileDown_WhenFileSelected_ShouldChangePosition()
     {
         // Arrange
@@ -65,7 +65,7 @@ public class FileListTests : AppiumTestBase
         // Verify file position changed
     }
 
-    [Fact(Skip = "Requires WinAppDriver to be running")]
+    [Fact]
     public void DragAndDrop_WhenFilesDropped_ShouldAddToFileList()
     {
         // Arrange
