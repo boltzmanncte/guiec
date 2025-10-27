@@ -1,4 +1,5 @@
-using vfv.Services;
+using vfv.Services.Persistence;
+using vfv.Services.Models;
 
 namespace vfv.GUIntegrationTests.Tests;
 
@@ -8,19 +9,18 @@ namespace vfv.GUIntegrationTests.Tests;
 public class FilePersistenceTests : IDisposable
 {
     private readonly FileListPersistence _persistence;
-    private readonly string _testStorageFile;
+    private readonly string _testStorageDir;
 
     public FilePersistenceTests()
     {
         // Use a test-specific storage path that doesn't require MAUI runtime
-        var testDir = Path.Combine(Path.GetTempPath(), "vfv_persistence_tests");
-        Directory.CreateDirectory(testDir);
-        _testStorageFile = Path.Combine(testDir, $"fileList_test_{Guid.NewGuid()}.json");
+        _testStorageDir = Path.Combine(Path.GetTempPath(), $"vfv_persistence_tests_{Guid.NewGuid()}");
+        Directory.CreateDirectory(_testStorageDir);
 
-        _persistence = new FileListPersistence(_testStorageFile);
+        _persistence = new FileListPersistence(_testStorageDir);
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task SaveFileListAsync_WhenCalled_ShouldCreateStorageFile()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class FilePersistenceTests : IDisposable
         _persistence.HasPersistedData().Should().BeTrue("Storage file should exist after saving");
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task LoadFileListAsync_WhenStorageExists_ShouldReturnSavedFiles()
     {
         // Arrange
@@ -48,7 +48,7 @@ public class FilePersistenceTests : IDisposable
         loadedFiles.Should().HaveCount(testFiles.Count);
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task LoadFileListAsync_WhenNoStorage_ShouldReturnEmptyList()
     {
         // Arrange
@@ -62,12 +62,12 @@ public class FilePersistenceTests : IDisposable
         loadedFiles.Should().BeEmpty();
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task LoadFileListAsync_WhenFileDoesNotExist_ShouldSkipMissingFiles()
     {
         // Arrange
         var testFiles = CreateTestFileItems();
-        testFiles.Add(new vfv.Models.FileItem
+        testFiles.Add(new FileItemDto
         {
             Id = Guid.NewGuid().ToString(),
             Name = "nonexistent.xml",
@@ -84,7 +84,7 @@ public class FilePersistenceTests : IDisposable
             "Files that no longer exist should not be loaded");
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task ClearStorageAsync_WhenCalled_ShouldRemoveStorageFile()
     {
         // Arrange
@@ -99,11 +99,11 @@ public class FilePersistenceTests : IDisposable
         _persistence.HasPersistedData().Should().BeFalse("Storage file should be deleted");
     }
 
-    [Fact(Skip = "Requires MAUI runtime - FileListPersistence uses FileSystem.AppDataDirectory")]
+    [Fact]
     public async Task SaveAndLoad_ShouldPreserveFileProperties()
     {
         // Arrange
-        var originalFile = new vfv.Models.FileItem
+        var originalFile = new FileItemDto
         {
             Id = Guid.NewGuid().ToString(),
             Name = "test.xml",
@@ -114,7 +114,7 @@ public class FilePersistenceTests : IDisposable
             FilePath = CreateTestFile("test.xml")
         };
 
-        var testFiles = new List<vfv.Models.FileItem> { originalFile };
+        var testFiles = new List<FileItemDto> { originalFile };
         await _persistence.SaveFileListAsync(testFiles);
 
         // Act
@@ -128,14 +128,14 @@ public class FilePersistenceTests : IDisposable
         loadedFile.FilePath.Should().Be(originalFile.FilePath);
     }
 
-    private List<vfv.Models.FileItem> CreateTestFileItems()
+    private List<FileItemDto> CreateTestFileItems()
     {
         var testFile1Path = CreateTestFile("test1.xml");
         var testFile2Path = CreateTestFile("test2.json");
 
-        return new List<vfv.Models.FileItem>
+        return new List<FileItemDto>
         {
-            new vfv.Models.FileItem
+            new FileItemDto
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "test1.xml",
@@ -145,7 +145,7 @@ public class FilePersistenceTests : IDisposable
                 Modified = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
                 FilePath = testFile1Path
             },
-            new vfv.Models.FileItem
+            new FileItemDto
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "test2.json",

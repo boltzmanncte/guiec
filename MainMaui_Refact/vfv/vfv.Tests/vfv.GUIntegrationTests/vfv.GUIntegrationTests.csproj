@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\vfv\vfv.csproj" />
+    <ProjectReference Include="..\..\vfv.Services\vfv.Services.csproj" />
   </ItemGroup>
 
 </Project>
