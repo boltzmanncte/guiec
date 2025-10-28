@@ -11,8 +11,12 @@
     <Project Path="vfv.Tests/vfv.GUIntegrationTests/vfv.GUIntegrationTests.csproj">
       <BuildType Solution="Deploy|*" Project="Release" />
     </Project>
+    <Project Path="vfv.Tests/vfv.UnitTests/vfv.UnitTests.csproj">
+      <BuildType Solution="Deploy|*" Project="Release" />
+    </Project>
   </Folder>
   <Project Path="vfv/vfv.csproj">
     <Deploy Solution="*|Any CPU" />
   </Project>
+  <Project Path="vfv.Services/vfv.Services.csproj" />
 </Solution>

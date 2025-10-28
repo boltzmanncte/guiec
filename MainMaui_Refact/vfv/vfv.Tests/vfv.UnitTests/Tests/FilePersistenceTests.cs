@@ -1,10 +1,12 @@
 using vfv.Services.Persistence;
 using vfv.Services.Models;
+using FluentAssertions;
+using Xunit;
 
-namespace vfv.GUIntegrationTests.Tests;
+namespace vfv.UnitTests.Tests;
 
 /// <summary>
-/// Integration tests for file list persistence functionality
+/// Unit tests for file list persistence functionality
 /// </summary>
 public class FilePersistenceTests : IDisposable
 {
