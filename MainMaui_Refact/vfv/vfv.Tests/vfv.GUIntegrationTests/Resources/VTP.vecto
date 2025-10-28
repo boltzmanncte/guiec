@@ -1,0 +1,36 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2022-09-12T13:30:50.8149043Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "DeclarationVehicle": "vehicle_sampleSingleModeDualFuel_2p4.xml",
+    "ManufacturerRecord": "vehicle_sampleSingleModeDualFuel_2p4.MANUFACTURER.xml",
+    "CustomerInformationFile": "vehicle_sampleSingleModeDualFuel_2p4.CUSTOMER.xml",
+    "Mileage": 30000.0,
+    "FanPowerCoefficients": [
+      0.0,
+      1.0,
+      1.0
+    ],
+    "FanDiameter": 0.3,
+    "FuelNCVs": [
+      {
+        "Type": "Diesel CI",
+        "NCV": 42.5
+      },
+      {
+        "Type": "NG CI",
+        "NCV": 48.0
+      }
+    ],
+    "TorqueDriftLeftWheel": 0.0,
+    "TorqueDriftRightWheel": 0.0,
+    "Cycles": [
+      "vtp_cycle_2Hz.vdri"
+    ]
+  }
+}

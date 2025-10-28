@@ -30,6 +30,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\vfv.Services\vfv.Services.csproj" />
+    <ProjectReference Include="..\..\vfv\vfv.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>compile</IncludeAssets>
+      <ExcludeAssets>contentFiles;build;buildTransitive</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

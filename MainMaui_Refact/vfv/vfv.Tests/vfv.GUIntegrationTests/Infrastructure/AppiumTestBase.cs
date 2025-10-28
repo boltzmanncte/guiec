@@ -36,17 +36,6 @@ public abstract class AppiumTestBase : IDisposable
 		_appRunner.Start();
 		Console.WriteLine($"Launched application with PID: {_appRunner.ProcessId}, waiting for window to appear...");
 
-		// Wait for the application window to stabilize
-		Thread.Sleep(5000);
-
-		// Check if app is still running
-		if (!_appRunner.IsRunning)
-		{
-			throw new InvalidOperationException("Application exited immediately after launch. Check application logs for errors.");
-		}
-
-		Console.WriteLine($"Application still running (PID: {_appRunner.ProcessId}), attempting to connect...");
-
 		// Retry logic for session initialization
 		int maxRetries = 5;
 		int retryCount = 0;
@@ -100,7 +89,7 @@ public abstract class AppiumTestBase : IDisposable
     }
 
     /// <summary>
-    /// Get window handle by process ID
+    /// Get window handle by process ID - waits for window to appear
     /// </summary>
     private static string GetWindowHandleByProcessId(int processId)
     {
@@ -108,12 +97,31 @@ public abstract class AppiumTestBase : IDisposable
         if (process == null || process.HasExited)
             throw new InvalidOperationException($"Process with PID {processId} not found or has exited");
 
-        // Return the main window handle in hexadecimal format
-        var mainHandle = process.MainWindowHandle;
-        if (mainHandle == IntPtr.Zero)
-            throw new InvalidOperationException("Process found but main window handle is not available (window may not be visible yet)");
+        // Wait for main window handle to become available (MAUI apps take time to show window)
+        int maxWaitSeconds = 30;
+        int waitedSeconds = 0;
 
-        return mainHandle.ToString("X");
+        while (waitedSeconds < maxWaitSeconds)
+        {
+            process.Refresh(); // Refresh process info
+            var mainHandle = process.MainWindowHandle;
+
+            if (mainHandle != IntPtr.Zero)
+            {
+                Console.WriteLine($"Window handle found after {waitedSeconds} seconds");
+                return mainHandle.ToString("X");
+            }
+
+            if (process.HasExited)
+            {
+                throw new InvalidOperationException($"Process exited while waiting for window (after {waitedSeconds} seconds)");
+            }
+
+            Thread.Sleep(1000);
+            waitedSeconds++;
+        }
+
+        throw new InvalidOperationException($"Window handle not available after waiting {maxWaitSeconds} seconds");
     }
 
     /// <summary>
