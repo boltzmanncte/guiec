@@ -130,6 +130,39 @@ public class FilePersistenceTests : IDisposable
         loadedFile.FilePath.Should().Be(originalFile.FilePath);
     }
 
+    [Theory]
+    [InlineData(500, "500 B")]              // Less than 1 KB - no loop iteration
+    [InlineData(1024, "1 KB")]              // Exactly 1 KB - 1 loop iteration
+    [InlineData(2048, "2 KB")]              // 2 KB - 1 loop iteration
+    [InlineData(1048576, "1 MB")]           // Exactly 1 MB - 2 loop iterations
+    [InlineData(1572864, "1.5 MB")]         // 1.5 MB - 2 loop iterations
+    [InlineData(1073741824, "1 GB")]        // Exactly 1 GB - 3 loop iterations
+    [InlineData(5368709120, "5 GB")]        // 5 GB - 3 loop iterations
+    public async Task LoadFileListAsync_WhenCalledWithDifferentFileSizes_ShouldFormatSizeCorrectly(long fileSize, string expectedSize)
+    {
+        // Arrange
+        var testFilePath = CreateTestFileWithSize("sizefile.xml", fileSize);
+        var testFile = new FileItemDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "sizefile.xml",
+            Extension = "xml",
+            Description = "Test file for size formatting",
+            FilePath = testFilePath
+        };
+
+        var testFiles = new List<FileItemDto> { testFile };
+        await _persistence.SaveFileListAsync(testFiles);
+
+        // Act
+        var loadedFiles = await _persistence.LoadFileListAsync();
+
+        // Assert
+        var loadedFile = loadedFiles.Should().ContainSingle().Subject;
+        loadedFile.Size.Should().Be(expectedSize,
+            $"A file of {fileSize} bytes should be formatted as {expectedSize}");
+    }
+
     private List<FileItemDto> CreateTestFileItems()
     {
         var testFile1Path = CreateTestFile("test1.xml");
@@ -167,6 +200,22 @@ public class FilePersistenceTests : IDisposable
 
         var filePath = Path.Combine(testDir, fileName);
         File.WriteAllText(filePath, $"<test>Content for {fileName}</test>");
+
+        return filePath;
+    }
+
+    private string CreateTestFileWithSize(string fileName, long sizeInBytes)
+    {
+        var testDir = Path.Combine(Path.GetTempPath(), "vfv_test_files");
+        Directory.CreateDirectory(testDir);
+
+        var filePath = Path.Combine(testDir, fileName);
+
+        // Create a file with the specified size
+        using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            fs.SetLength(sizeInBytes);
+        }
 
         return filePath;
     }
