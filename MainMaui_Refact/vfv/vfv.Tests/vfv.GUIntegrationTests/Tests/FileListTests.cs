@@ -1,6 +1,7 @@
 using vfv.GUIntegrationTests.Infrastructure;
 using vfv.Services.Models;
 using vfv.Services.Persistence;
+using System.Windows.Forms;
 
 namespace vfv.GUIntegrationTests.Tests;
 
@@ -235,93 +236,144 @@ public class FileListTests : AppiumTestBase
         }
     }
 
-    /// <summary>
-    /// Initializer method that populates the file list with three test files
-    /// This method creates physical test files and persists them using FileListPersistence
-    /// so they will be loaded when the application starts
-    /// </summary>
-    private async Task PopulateFileListWithTestFiles()
-    {
-        // Create a temporary directory for test files
-        var testFilesDir = Path.Combine(Path.GetTempPath(), "vfv_test_files", Guid.NewGuid().ToString());
-        Directory.CreateDirectory(testFilesDir);
+	/// <summary>
+	/// Test to verify that PopulateFileListWithTestFiles adds files via File Picker
+	/// </summary>
+	[Fact]
+	public void FileList_WithTestData_ShouldContainThreeFiles()
+	{
+		// Arrange - Initialize the application first
+		InitializeSession(AppPath);
 
+		// Wait for application to be ready
+		Thread.Sleep(2000);
+
+		// Act - Add test files via File Picker UI automation
+		PopulateFileListWithTestFiles();
+
+		// Wait for files to be added
+		Thread.Sleep(2000);
+
+		// Assert - Verify three files are present in the file list
+		var fileListElements = Session!.FindElementsByClassName("CheckBox");
+		fileListElements.Count.Should().Be(3, "File list should contain exactly 3 files");
+
+		// Verify the file names are present
+		var labels = Session!.FindElementsByClassName("Label");
+		var fileNames = labels.Select(l => l.Text).ToList();
+
+		fileNames.Should().Contain("vecto_vehicle-medium_lorry_4x2.xml", "First XML file should be in the list");
+		fileNames.Should().Contain("vehicle_sampleSingleModeDualFuel_2p4.xml", "Second XML file should be in the list");
+		fileNames.Should().Contain("VTP.vecto", "VECTO file should be in the list");
+
+		Console.WriteLine("Successfully verified 3 resource files added via File Picker");
+	}
+
+	/// <summary>
+	/// Initializer method that populates the file list with test files from Resources folder
+	/// This method uses the File Picker UI automation to add files to the application
+	/// </summary>
+	private void PopulateFileListWithTestFiles()
+    {
         try
         {
-            // Create three test files: 2 XML and 1 JSON
-            var testFile1 = Path.Combine(testFilesDir, "test_file_1.xml");
-            var testFile2 = Path.Combine(testFilesDir, "test_file_2.xml");
-            var testFile3 = Path.Combine(testFilesDir, "test_data.json");
+            // Get the Resources directory path
+            var resourcesDir = Path.Combine(AssemblyDirectory.Replace(@"bin\Debug\net8.0-windows10.0.19041.0", ""), "Resources");
 
-            File.WriteAllText(testFile1, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <test>Data 1</test>\n</root>");
-            File.WriteAllText(testFile2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <test>Data 2</test>\n</root>");
-            File.WriteAllText(testFile3, "{\n  \"test\": \"data\",\n  \"value\": 123\n}");
+            if (!Directory.Exists(resourcesDir))
+            {
+                throw new DirectoryNotFoundException($"Resources directory not found: {resourcesDir}");
+            }
+
+            // Get the test files from Resources directory
+            var testFile1 = Path.Combine(resourcesDir, "vecto_vehicle-medium_lorry_4x2.xml");
+            var testFile2 = Path.Combine(resourcesDir, "vehicle_sampleSingleModeDualFuel_2p4.xml");
+            var testFile3 = Path.Combine(resourcesDir, "VTP.vecto");
+
+            // Verify files exist
+            if (!File.Exists(testFile1) || !File.Exists(testFile2) || !File.Exists(testFile3))
+            {
+                throw new FileNotFoundException("One or more test resource files not found");
+            }
 
             // Store test files info for later use
             TestFile1Path = testFile1;
             TestFile2Path = testFile2;
             TestFile3Path = testFile3;
-            TestFilesDirectory = testFilesDir;
+            TestFilesDirectory = resourcesDir;
 
-            // Create FileItemDto objects for the test files
-            var fileInfo1 = new FileInfo(testFile1);
-            var fileInfo2 = new FileInfo(testFile2);
-            var fileInfo3 = new FileInfo(testFile3);
+            Console.WriteLine($"Resource files located:");
+            Console.WriteLine($"  - {Path.GetFileName(testFile1)}");
+            Console.WriteLine($"  - {Path.GetFileName(testFile2)}");
+            Console.WriteLine($"  - {Path.GetFileName(testFile3)}");
 
-            var testFileItems = new List<FileItemDto>
-            {
-                new FileItemDto
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Path.GetFileName(testFile1),
-                    Extension = "xml",
-                    Description = "Test XML file 1",
-                    Size = $"{fileInfo1.Length} bytes",
-                    Modified = fileInfo1.LastWriteTime.ToString("MMM d, yyyy"),
-                    FilePath = testFile1,
-                    IsSelected = false
-                },
-                new FileItemDto
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Path.GetFileName(testFile2),
-                    Extension = "xml",
-                    Description = "Test XML file 2",
-                    Size = $"{fileInfo2.Length} bytes",
-                    Modified = fileInfo2.LastWriteTime.ToString("MMM d, yyyy"),
-                    FilePath = testFile2,
-                    IsSelected = false
-                },
-                new FileItemDto
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Path.GetFileName(testFile3),
-                    Extension = "json",
-                    Description = "Test JSON file",
-                    Size = $"{fileInfo3.Length} bytes",
-                    Modified = fileInfo3.LastWriteTime.ToString("MMM d, yyyy"),
-                    FilePath = testFile3,
-                    IsSelected = false
-                }
-            };
+            // Click the "Open File" button to trigger the file picker
+            var openFileButton = WaitForElement(By.Name("Open File"));
+            openFileButton.Should().NotBeNull("Open File button should be visible");
 
-            // Get the application's storage directory (LocalApplicationData)
-            var storageDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vfv");
+            Console.WriteLine("Clicking 'Open File' button to open file picker...");
+            openFileButton.Click();
 
-            // Persist the file list so it's loaded when the app starts
-            var persistence = new FileListPersistence(storageDir);
-            await persistence.SaveFileListAsync(testFileItems);
+            // Wait for file picker dialog to appear
+            Thread.Sleep(1500);
 
-            Console.WriteLine($"Created and persisted test files:");
-            Console.WriteLine($"  - {Path.GetFileName(testFile1)} (xml)");
-            Console.WriteLine($"  - {Path.GetFileName(testFile2)} (xml)");
-            Console.WriteLine($"  - {Path.GetFileName(testFile3)} (json)");
+            // Use SendKeys to interact with the file picker dialog
+            // Type the first file path directly
+            Console.WriteLine($"Sending file path to file picker: {testFile1}");
+            SendKeys.SendWait(testFile1);
+            Thread.Sleep(500);
+
+            // Press Enter to select the file
+            SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(1000);
+
+            // Repeat for second file
+            Console.WriteLine("Opening file picker for second file...");
+            openFileButton = WaitForElement(By.Name("Open File"));
+            openFileButton.Click();
+            Thread.Sleep(1500);
+
+            Console.WriteLine($"Sending file path to file picker: {testFile2}");
+            SendKeys.SendWait(testFile2);
+            Thread.Sleep(500);
+            SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(1000);
+
+            // Repeat for third file
+            Console.WriteLine("Opening file picker for third file...");
+            openFileButton = WaitForElement(By.Name("Open File"));
+            openFileButton.Click();
+            Thread.Sleep(1500);
+
+            Console.WriteLine($"Sending file path to file picker: {testFile3}");
+            SendKeys.SendWait(testFile3);
+            Thread.Sleep(500);
+            SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(1000);
+
+            Console.WriteLine("Successfully added all three files via File Picker");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to create test files: {ex.Message}");
+            Console.WriteLine($"Failed to populate test files via File Picker: {ex.Message}");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Format file size in human-readable format
+    /// </summary>
+    private static string FormatFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:0.#} {sizes[order]}";
     }
 
     /// <summary>
@@ -333,7 +385,8 @@ public class FileListTests : AppiumTestBase
     private string? TestFilesDirectory { get; set; }
 
     /// <summary>
-    /// Cleanup test files and persistence after tests complete
+    /// Cleanup persistence after tests complete
+    /// Note: Resource files are not deleted as they are permanent test resources
     /// </summary>
     private async Task CleanupTestFiles()
     {
@@ -346,12 +399,7 @@ public class FileListTests : AppiumTestBase
             var persistence = new FileListPersistence(storageDir);
             await persistence.ClearStorageAsync();
 
-            // Delete physical test files
-            if (!string.IsNullOrEmpty(TestFilesDirectory) && Directory.Exists(TestFilesDirectory))
-            {
-                Directory.Delete(TestFilesDirectory, true);
-                Console.WriteLine($"Cleaned up test files directory: {TestFilesDirectory}");
-            }
+            Console.WriteLine("Cleaned up persisted file list");
         }
         catch (Exception ex)
         {
@@ -418,35 +466,5 @@ public class FileListTests : AppiumTestBase
     {
         CleanupTestFiles().Wait();
         base.Dispose();
-    }
-
-    /// <summary>
-    /// Test to verify that PopulateFileListWithTestFiles creates and loads three files
-    /// </summary>
-    [Fact]
-    public async Task FileList_WithTestData_ShouldContainThreeFiles()
-    {
-        // Arrange - Create and persist test files
-        PopulateFileListWithTestFiles();
-
-        // Act - Initialize the application (it will load the persisted files)
-        InitializeSession(AppPath);
-
-        // Wait for files to load
-        Thread.Sleep(2000);
-
-        // Assert - Verify three files are present in the file list
-        var fileListElements = Session!.FindElementsByClassName("CheckBox");
-        fileListElements.Count.Should().Be(3, "File list should contain exactly 3 files");
-
-        // Verify the file names are present
-        var labels = Session!.FindElementsByClassName("Label");
-        var fileNames = labels.Select(l => l.Text).ToList();
-
-        fileNames.Should().Contain("test_file_1.xml", "First XML file should be in the list");
-        fileNames.Should().Contain("test_file_2.xml", "Second XML file should be in the list");
-        fileNames.Should().Contain("test_data.json", "JSON file should be in the list");
-
-        Console.WriteLine("Successfully verified 3 test files in the file list");
     }
 }
